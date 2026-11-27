@@ -1,0 +1,52 @@
+{
+  "info": {
+    "name": "CampusConnect API",
+    "description": "Starter request examples for SE3002 assignment testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {"method": "GET", "url": "http://127.0.0.1:5000/health"}
+    },
+    {
+      "name": "Get All Students",
+      "request": {"method": "GET", "url": "http://127.0.0.1:5000/api/students"}
+    },
+    {
+      "name": "Create Student",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Noor Fatima\",\n  \"email\": \"noor@example.com\",\n  \"age\": 21,\n  \"department\": \"Software Engineering\",\n  \"marks\": 87.5,\n  \"status\": \"Active\"\n}"},
+        "url": "http://127.0.0.1:5000/api/students"
+      }
+    },
+    {
+      "name": "Get Student 1",
+      "request": {"method": "GET", "url": "http://127.0.0.1:5000/api/students/1"}
+    },
+    {
+      "name": "Update Student 1",
+      "request": {
+        "method": "PUT",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Ayesha Khan Updated\",\n  \"email\": \"ayesha@example.com\",\n  \"age\": 21,\n  \"department\": \"Software Engineering\",\n  \"marks\": 90,\n  \"status\": \"Active\"\n}"},
+        "url": "http://127.0.0.1:5000/api/students/1"
+      }
+    },
+    {
+      "name": "Delete Student 3",
+      "request": {"method": "DELETE", "url": "http://127.0.0.1:5000/api/students/3"}
+    },
+    {
+      "name": "Negative - Invalid Student",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"N\",\n  \"email\": \"bad-email\",\n  \"age\": 15,\n  \"department\": \"\",\n  \"marks\": 120,\n  \"status\": \"Unknown\"\n}"},
+        "url": "http://127.0.0.1:5000/api/students"
+      }
+    }
+  ]
+}

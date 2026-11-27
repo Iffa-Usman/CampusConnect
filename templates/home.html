@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}CampusConnect | Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">STUDENT MANAGEMENT, SIMPLIFIED</span>
+    <h1>One place for your<br><span>campus records.</span></h1>
+    <p>Keep student information organised. Add records, find details, update information and manage student status with ease.</p>
+    <div class="actions">
+      <a class="btn primary" href="{{ url_for('register') }}">Get started</a>
+      <a class="btn secondary" href="{{ url_for('login') }}">I already have an account</a>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="mock-top"><i></i><i></i><i></i><b>Campus overview</b></div>
+    <div class="mock-stats"><div><small>Total students</small><strong>128</strong></div><div><small>Departments</small><strong>06</strong></div></div>
+    <div class="mock-line"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="mock-row"><b>Student records</b><small>Recently updated</small></div>
+    <div class="mock-person"><span class="avatar">AK</span><div><b>Ayesha Khan</b><small>Software Engineering</small></div><em>Active</em></div>
+    <div class="mock-person"><span class="avatar purple">HA</span><div><b>Hamza Ali</b><small>Computer Science</small></div><em>Active</em></div>
+    <div class="mock-person"><span class="avatar orange">SA</span><div><b>Sara Ahmed</b><small>Information Technology</small></div><em class="inactive">Inactive</em></div>
+  </div>
+</section>
+<section class="feature-grid">
+  <article class="feature"><div class="feature-icon">＋</div><h3>Manage records</h3><p>Create, update and delete student profiles.</p></article>
+  <article class="feature"><div class="feature-icon">⌕</div><h3>Find information</h3><p>Search student names, emails and departments.</p></article>
+  <article class="feature"><div class="feature-icon">✓</div><h3>Track status</h3><p>Keep track of active and inactive students.</p></article>
+</section>
+{% endblock %}

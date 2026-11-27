@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | CampusConnect{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><span class="eyebrow">OVERVIEW</span><h1>Student dashboard</h1><p class="muted">Welcome, {{ current_user }}. Manage your student records below.</p></div>
+  <a class="btn primary" href="{{ url_for('add_student') }}">＋ Add student</a>
+</div>
+<section class="stats-grid">
+  <div class="stat-card"><span>Total students</span><strong>{{ stats.total }}</strong><small>All records</small></div>
+  <div class="stat-card"><span>Active students</span><strong>{{ stats.active }}</strong><small class="green">Currently active</small></div>
+  <div class="stat-card"><span>Inactive students</span><strong>{{ stats.inactive }}</strong><small>Not currently active</small></div>
+</section>
+<section class="panel">
+  <div class="panel-heading"><div><h2>Student records</h2><p class="muted">Search and manage student information.</p></div>
+    <form class="search-form" method="get" action="{{ url_for('dashboard') }}"><input name="q" value="{{ q }}" placeholder="Search name, email, department"><button class="btn secondary" type="submit">Search</button>{% if q %}<a class="clear-link" href="{{ url_for('dashboard') }}">Clear</a>{% endif %}</form>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Student</th><th>Department</th><th>Age</th><th>Marks</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for s in students %}
+      <tr>
+        <td><b>{{ s.name }}</b><small class="table-sub">{{ s.email }}</small></td>
+        <td>{{ s.department }}</td><td>{{ s.age }}</td><td>{{ "%.1f"|format(s.marks) }}%</td>
+        <td><span class="status {{ 'active' if s.status == 'Active' else 'inactive' }}">{{ s.status }}</span></td>
+        <td class="row-actions"><a href="{{ url_for('edit_student', student_id=s.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('delete_student', student_id=s.id) }}" onsubmit="return confirm('Delete this student record?')"><button class="delete-link" type="submit">Delete</button></form></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="empty">No students found. Add a student or change your search.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <div class="table-foot">Showing {{ students|length }} record(s)</div>
+</section>
+{% endblock %}

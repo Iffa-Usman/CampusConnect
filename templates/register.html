@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Create account | CampusConnect{% endblock %}
+{% block content %}
+<section class="auth-wrap"><div class="auth-card">
+  <span class="eyebrow">GET STARTED</span><h1>Create your account</h1>
+  <p class="muted">Register to manage student records.</p>
+  <form method="post">
+    <label>Full name</label><input id="name" name="name" type="text" minlength="2" maxlength="60" placeholder="Your full name" required>
+    <label>Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" required>
+    <label>Password</label><input id="password" name="password" type="password" minlength="6" placeholder="At least 6 characters" required>
+    <button class="btn primary full" type="submit">Create account</button>
+  </form>
+  <p class="auth-bottom">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+</div></section>
+{% endblock %}
