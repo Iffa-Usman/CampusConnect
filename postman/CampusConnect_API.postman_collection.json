@@ -1,0 +1,228 @@
+{
+  "info": {
+    "name": "CampusConnect API \u2013",
+    "description": "Postman API test collection. Run against locally running CampusConnect. Requests create a temporary student, read it, update it, test invalid data, delete it, and verify 404.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:5000"
+    },
+    {
+      "key": "studentId",
+      "value": ""
+    },
+    {
+      "key": "studentEmail",
+      "value": ""
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.collectionVariables.set(\"studentEmail\", \"iffa-api-\" + pm.variables.replaceIn(\"{{$guid}}\") + \"@example.com\");"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "01 \u2013 Health check",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Health status is success\", () => pm.expect(pm.response.json().status).to.eql(\"success\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 \u2013 Get all students",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/students"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Response is an array\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 \u2013 Create student (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Iffa API Test Student\",\n  \"email\": \"{{studentEmail}}\",\n  \"age\": 21,\n  \"department\": \"Software Engineering\",\n  \"marks\": 85,\n  \"status\": \"Active\"\n}"
+        },
+        "url": "{{baseUrl}}/api/students"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Student created with 201\", () => pm.response.to.have.status(201));",
+              "const body = pm.response.json();",
+              "pm.test(\"Response contains student fields\", function () {",
+              "  pm.expect(body).to.have.property(\"id\");",
+              "  pm.expect(body.name).to.eql(\"Iffa API Test Student\");",
+              "  pm.expect(body.email).to.eql(pm.collectionVariables.get(\"studentEmail\"));",
+              "});",
+              "pm.collectionVariables.set(\"studentId\", body.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 \u2013 Get created student (GET)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/students/{{studentId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Correct student is returned\", function () {",
+              "  pm.expect(String(pm.response.json().id)).to.eql(String(pm.collectionVariables.get(\"studentId\")));",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 \u2013 Update created student (PUT)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Iffa API Test Student Updated\",\n  \"email\": \"{{studentEmail}}\",\n  \"age\": 22,\n  \"department\": \"Software Engineering\",\n  \"marks\": 92,\n  \"status\": \"Active\"\n}"
+        },
+        "url": "{{baseUrl}}/api/students/{{studentId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Update returns 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Updated values are returned\", function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.marks).to.eql(92);",
+              "  pm.expect(body.name).to.eql(\"Iffa API Test Student Updated\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 \u2013 Negative: invalid student (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"X\",\n  \"email\": \"invalid-email\",\n  \"age\": 15,\n  \"department\": \"\",\n  \"marks\": 120,\n  \"status\": \"Unknown\"\n}"
+        },
+        "url": "{{baseUrl}}/api/students"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Invalid student is rejected with 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error message is returned\", () => pm.expect(pm.response.json()).to.have.property(\"error\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 \u2013 Delete created student (DELETE)",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/students/{{studentId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Delete returns 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Delete confirmation is returned\", () => pm.expect(pm.response.json().message).to.eql(\"Student deleted.\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 \u2013 Verify deleted student returns 404",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/students/{{studentId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Deleted student is not found\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Not-found error is returned\", () => pm.expect(pm.response.json().error).to.eql(\"Student not found.\"));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
