@@ -1,0 +1,8 @@
+[2026-11-28T13:43:19.860Z] Selenium run started against http://127.0.0.1:5000
+[2026-11-28T13:43:21.738Z] Setup: registered test user selenium.1795873398000@example.com
+[2026-11-28T13:43:23.124Z] PASS  TC-DT-01  Login with valid credentials (positive)
+[2026-11-28T13:43:34.138Z] PASS  TC-DT-02  Login with wrong password (negative)
+[2026-11-28T13:43:45.880Z] PASS  TC-ST-01  Add valid student and find it on dashboard (positive)
+[2026-11-28T13:43:47.033Z]     browser validation message: "Value must be greater than or equal to 16."
+[2026-11-28T13:43:47.790Z] PASS  TC-EP-02  Add student with age 15 is rejected (negative)
+[2026-11-28T13:43:47.790Z] Summary: 4 passed, 0 failed, 4 total
